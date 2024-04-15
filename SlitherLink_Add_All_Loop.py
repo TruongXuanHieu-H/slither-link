@@ -11,8 +11,6 @@ class SlitherLinkAddAllLoop(SlitherLinkBase):
                 self.model = self.list_loops[0]
                 return
 
-            valid_loops = []
-
             for curr_loop in self.list_loops:
                 self.solver.add_clause([-i for i in curr_loop])
                 self.cond.append([-i for i in curr_loop])
@@ -26,7 +24,7 @@ class SlitherLinkAddAllLoop(SlitherLinkBase):
 
 if __name__ == "__main__":
     solver = SlitherLinkAddAllLoop(Minisat22)
-    solver.load_from_file("puzzle/3x3_1.txt")
+    solver.load_from_file("puzzle/puzzle_50x40_1.txt")
     start_time = time.time()
     solver.solve()
     end_time = time.time()

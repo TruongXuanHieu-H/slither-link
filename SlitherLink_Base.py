@@ -5,6 +5,10 @@ import converter_2
 
 class SlitherLinkBase(ABC):
     def __init__(self, solver):
+        self.edges = None
+        self.converter = None
+        self.row = None
+        self.col = None
         self.solver = solver()
         self.result = None
         self.model = None
@@ -21,7 +25,6 @@ class SlitherLinkBase(ABC):
     def load_from_file(self, filename):
         with open(filename, 'rt') as file:
             lines = file.readlines()
-
         assert len(lines[0].split()) == 2, "Invalid"
         self.row, self.col = [int(x) for x in lines[0].split()]
         self.board = -np.ones(self.row * self.col, dtype=np.int32).reshape(self.row, self.col)
@@ -125,12 +128,12 @@ class SlitherLinkBase(ABC):
         self.cond.append([e1, e2, -e3, e4])
         self.cond.append([e1, e2, e3, -e4])
 
-    def build_constraints(self):
+    def build_cond(self):
         self.build_cell_rule()
         self.build_neighbor_rule()
 
     def solve(self):
-        self.build_constraints()
+        self.build_cond()
         self.num_loops = 1
         for cond in self.cond:
             try:
