@@ -100,25 +100,19 @@ class SlitherLinkBase(ABC):
             raise ValueError
 
     def build_two_neighbor(self, edges):
-        e1 = edges[0]
-        e2 = edges[1]
+        e1, e2 = edges
         self.cond.append([-e1, e2])
         self.cond.append([e1, -e2])
 
     def build_three_neighbor(self, edges):
-        e1 = edges[0]
-        e2 = edges[1]
-        e3 = edges[2]
+        e1, e2, e3 = edges
         self.cond.append([-e1, e2, e3])
         self.cond.append([e1, -e2, e3])
         self.cond.append([e1, e2, -e3])
         self.cond.append([-e1, -e2, -e3])
 
     def build_four_neighbor(self, edges):
-        e1 = edges[0]
-        e2 = edges[1]
-        e3 = edges[2]
-        e4 = edges[3]
+        e1, e2, e3, e4 = edges
         self.cond.append([-e1, -e2, -e3])
         self.cond.append([-e1, -e2, -e4])
         self.cond.append([-e1, -e3, -e4])
@@ -136,16 +130,11 @@ class SlitherLinkBase(ABC):
         self.build_cond()
         self.num_loops = 1
         for cond in self.cond:
-            try:
-                self.solver.add_clause(cond)
-            except (ValueError, TypeError) as e:
-                print(f"Condition error: '{cond}'")
-                raise
+            self.solver.add_clause(cond)
         self.base_cond = [x for x in self.cond]
         self.result = self.solver.solve()
         self.model = self.solver.get_model()
         self.model_arr.append(self.model)
-
         self.loop_solve()
 
     @abstractmethod
