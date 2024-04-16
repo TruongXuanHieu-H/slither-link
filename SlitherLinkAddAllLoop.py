@@ -1,4 +1,4 @@
-from SlitherLink_Base import SlitherLinkBase
+from SlitherLinkBase import SlitherLinkBase
 from pysat.solvers import Minisat22
 import time
 

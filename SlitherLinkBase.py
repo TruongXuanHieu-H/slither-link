@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 
 import converter_2
 
+
 class SlitherLinkBase(ABC):
     def __init__(self, solver):
         self.base_cond = []
@@ -10,7 +11,6 @@ class SlitherLinkBase(ABC):
         self.col = None
         self.cond = []
         self.converter = None
-        self.curr_solver = None
         self.edges = None
         self.list_loops = None
         self.list_nums = []
@@ -138,7 +138,7 @@ class SlitherLinkBase(ABC):
         for cond in self.cond:
             try:
                 self.solver.add_clause(cond)
-            except:
+            except (ValueError, TypeError) as e:
                 print(f"Condition error: '{cond}'")
                 raise
         self.base_cond = [x for x in self.cond]
