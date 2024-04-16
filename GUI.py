@@ -3,6 +3,8 @@ from tkinter import ttk
 from tkinter import filedialog as fd
 import time
 from SlitherLinkPreloading import SlitherLinkPreloading
+from SlitherLinkOrigin import SlitherLinkOrigin
+from SlitherLinkAddAllLoop import  SlitherLinkAddAllLoop
 from pysat.solvers import Minisat22
 
 
@@ -56,7 +58,7 @@ class LoadPage(tk.Frame):
         label0 = tk.Label(self, text="Version")
         label0.grid(row=0, column=0)
         self.version_choose = ttk.Combobox(self, textvariable=self.version_text)
-        self.version_choose['values'] = ('1', '2')
+        self.version_choose['values'] = ('Add All Loop', 'Origin', 'Preloading')
         self.version_choose.current(0)
         self.version_choose["state"] = "readonly"
         self.version_choose.grid(row=0, column=1)
@@ -87,6 +89,8 @@ class LoadPage(tk.Frame):
         self.filename.set(self.controller.filename)
 
     def next(self):
+        if (self.controller.filename == None or self.controller.filename == ""):
+            return
         self.controller.version_text = self.version_text.get()
         self.controller.add_frame(SlitherlinkUIPage)
         self.controller.show_frame(SlitherlinkUIPage)
@@ -101,7 +105,13 @@ class SlitherlinkUIPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        self.solver = SlitherLinkPreloading(Minisat22)
+        if (self.controller.version_text == "Add All Loop"):
+            self.solver = SlitherLinkAddAllLoop(Minisat22)
+        elif (self.controller.version_text == "Origin"):
+            self.solver = SlitherLinkOrigin(Minisat22)
+        elif (self.controller.version_text == "Preloading"):
+            self.solver = SlitherLinkPreloading(Minisat22)
+
         self.solver.load_from_file(self.controller.filename)
 
         width_value1 = self.winfo_screenwidth()
@@ -173,9 +183,9 @@ class SlitherlinkUIPage(tk.Frame):
 
     def solve_prev(self, *args):
         self.count -= 1
-        if self.count == 0:
+        if self.count == 1:
             self.button_1['state'] = "disable"
-        self.solver.model = self.solver.model_arr[self.count]
+        self.solver.model = self.solver.model_arr[self.count - 1]
 
         self.updateCan()
         self.num_loops.set(str(self.count))
@@ -184,9 +194,9 @@ class SlitherlinkUIPage(tk.Frame):
 
     def solve_next(self, *args):
         self.count += 1
-        if self.count == len(self.solver.model_arr) - 1:
+        if self.count == len(self.solver.model_arr):
             self.button_2['state'] = "disable"
-        self.solver.model = self.solver.model_arr[self.count]
+        self.solver.model = self.solver.model_arr[self.count - 1]
 
         self.updateCan()
         self.num_loops.set(str(self.count))
