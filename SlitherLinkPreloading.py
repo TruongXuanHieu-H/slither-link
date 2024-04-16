@@ -5,36 +5,39 @@ import time
 
 class SlitherLinkPreloading(SlitherLinkBase):
     def loop_solve(self):
-        while self.result and self.loop_count != 1:
+        while self.result and self.has_multi_loops():
             self.num_loops += 1
             self.result = self.solver.solve()
             self.model = self.solver.get_model()
             self.model_arr.append(self.model)
         pass
 
+    def has_multi_loops(self):
+        return self.loop_count > 1
+
     @property
     def loop_count(self):
         edges = {i for i in self.model if i > 0}
         clone_edges = {i for i in self.model if i > 0}
-        visited = {}
+        visited_edges = {}
 
-        def bfs(x_0, cnt):
-            queue = [x_0]
+        def bfs(edge, count):
+            queue = [edge]
             while len(queue) > 0:
                 x = queue.pop()
-                visited[x] = cnt
+                visited_edges[x] = count
                 u = self.converter.get_two_vertices(x)
                 neighbor_edges_1 = self.converter.get_neighbor_edges(u[0], u[1])
                 neighbor_edges_2 = self.converter.get_neighbor_edges(u[2], u[3])
                 for neighbor_edge in neighbor_edges_1 + neighbor_edges_2:
-                    if neighbor_edge not in visited and neighbor_edge in clone_edges:
+                    if neighbor_edge not in visited_edges and neighbor_edge in clone_edges:
                         queue.append(neighbor_edge)
                         clone_edges.remove(neighbor_edge)
 
         count = 0
         while len(clone_edges) > 0:
             edge = clone_edges.pop()
-            if edge not in visited:
+            if edge not in visited_edges:
                 bfs(edge, count)
                 count += 1
 
@@ -47,13 +50,13 @@ class SlitherLinkPreloading(SlitherLinkBase):
 
         for i in range(count):
             cnt_added[i] = 0
-            visited_cnt.append({x for x in edges if visited[x] == i})
+            visited_cnt.append({x for x in edges if visited_edges[x] == i})
             save[i] = []
 
         for cell in self.list_nums:
             i, j = cell
             side_edges = self.converter.get_side_edges(i, j)
-            val_edge = list({visited[edge] for edge in side_edges if edge in visited})
+            val_edge = list({visited_edges[edge] for edge in side_edges if edge in visited_edges})
             if len(val_edge) == 2:
                 cnt_added[val_edge[0]] += 1
                 cnt_added[val_edge[1]] += 1
@@ -64,11 +67,9 @@ class SlitherLinkPreloading(SlitherLinkBase):
             if cnt_added[x] == 0:
                 self.solver.add_clause([-i for i in visited_cnt[x]])
                 # self.cond.append([-i for i in visited_cnt[x]])
-        # print(cnt_added)
-        g = sorted(cnt_added.items(), key=lambda l: (len(visited_cnt[l[0]]), -l[1]))
-        # print(g)
-        for y in g:
-            loop = y[0]
+        sorted_cnt_added = sorted(cnt_added.items(), key=lambda l: (len(visited_cnt[l[0]]), -l[1]))
+        for sorted_cnt_item in sorted_cnt_added:
+            loop = sorted_cnt_item[0]
             if cnt_added[loop] == 0:
                 continue
 
@@ -82,7 +83,7 @@ class SlitherLinkPreloading(SlitherLinkBase):
 
 if __name__ == "__main__":
     solver = SlitherLinkPreloading(Minisat22)
-    solver.load_from_file("puzzle/puzzle_50x40_1.txt")
+    solver.load_from_file("puzzle/20x20_10.txt")
     start_time = time.time()
     solver.solve()
     end_time = time.time()

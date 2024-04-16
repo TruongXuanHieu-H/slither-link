@@ -21,6 +21,34 @@ class SlitherLinkAddAllLoop(SlitherLinkBase):
             self.model_arr.append(self.model)
         pass
 
+    def has_multi_loops(self):
+        self.list_loops = []
+        self.edges = {i for i in self.model if i > 0}
+        first_edge = self.edges.pop()
+        curr_loop = [first_edge]
+        x, y = self.converter.get_vertice(first_edge)
+
+        while len(self.edges) > 0:
+            is_continue = True
+            neighbor_edges = self.converter.get_neighbor_edges(x, y)
+            for neighbor_edge in neighbor_edges:
+                if neighbor_edge in self.edges:
+                    self.edges.remove(neighbor_edge)
+                    curr_loop.append(neighbor_edge)
+                    x, y = self.converter.get_next_vertice(x, y, neighbor_edge)
+                    is_continue = False
+                    break
+            if is_continue:
+                self.list_loops.append(curr_loop)
+                if len(self.edges) > 0:
+                    first_edge = self.edges.pop()
+                    curr_loop = [first_edge]
+                    x, y = self.converter.get_vertice(first_edge)
+
+        self.list_loops.append(curr_loop)
+        if len(self.list_loops) == 1:
+            return False
+        return True
 
 if __name__ == "__main__":
     solver = SlitherLinkAddAllLoop(Minisat22)
