@@ -5,22 +5,22 @@ import converter_2
 
 class SlitherLinkBase(ABC):
     def __init__(self, solver):
-        self.edges = None
-        self.converter = None
-        self.row = None
-        self.col = None
-        self.solver = solver()
-        self.result = None
-        self.model = None
-        self.curr_solver = None
         self.base_cond = []
-        self.cond = []
-        self.result_array = None
         self.board = None
-        self.num_loops = 1
+        self.col = None
+        self.cond = []
+        self.converter = None
+        self.curr_solver = None
+        self.edges = None
         self.list_loops = None
         self.list_nums = []
+        self.model = None
         self.model_arr = []
+        self.num_loops = 1
+        self.result = None
+        self.result_array = None
+        self.row = None
+        self.solver = solver()
 
     def load_from_file(self, filename):
         with open(filename, 'rt') as file:
