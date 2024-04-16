@@ -1,0 +1,7 @@
+python-sat
+numpy
+tk
+pandas
+openpyxl
+xlsxwriter
+jinja2
