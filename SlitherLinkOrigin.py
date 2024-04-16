@@ -15,7 +15,7 @@ class SlitherLinkOrigin(SlitherLinkBase):
             for curr_loop in self.list_loops:
                 list_nums = set(self.list_nums)
                 for edge in curr_loop:
-                    neighbor_cells = self.get_neighbor_cells(edge)
+                    neighbor_cells = self.converter.get_neighbor_cells(edge)
                     for cell in neighbor_cells:
                         if cell in list_nums:
                             is_side_cell = True
