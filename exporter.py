@@ -10,10 +10,10 @@ import SlitherLinkPreloading
 
 test_folder = glob.glob("puzzle/*.txt", recursive=True)
 
-add_all_loop_base_condition = []
-add_all_loop_total_condition = []
-add_all_loop_loop_count = []
-add_all_loop_time_elapsed = []
+all_loop_base_condition = []
+all_loop_total_condition = []
+all_loop_loop_count = []
+all_loop_time_elapsed = []
 
 origin_base_condition = []
 origin_total_condition = []
@@ -41,10 +41,10 @@ def process(solver, file, base_condition, total_condition, loop_count, time_elap
 for file in test_folder:
     print(file)
     print("add (add all loops)")
-    add_all_loop_base_condition, add_all_loop_total_condition, add_all_loop_loop_count, add_all_loop_time_elapsed = process(
-        SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file, add_all_loop_base_condition,
-        add_all_loop_total_condition,
-        add_all_loop_loop_count, add_all_loop_time_elapsed)
+    all_loop_base_condition, all_loop_total_condition, all_loop_loop_count, all_loop_time_elapsed = process(
+        SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file, all_loop_base_condition,
+        all_loop_total_condition,
+        all_loop_loop_count, all_loop_time_elapsed)
     print("add my")
     my_base_condition, my_total_condition, my_loop_count, my_time_elapsed = process(
         SlitherLinkPreloading.SlitherLinkPreloading(Minisat22), file, my_base_condition, my_total_condition,
@@ -55,10 +55,10 @@ for file in test_folder:
         origin_total_condition,
         origin_loop_count, origin_time_elapsed)
 
-add_all_loop_base_condition.append(sum(add_all_loop_base_condition))
-add_all_loop_total_condition.append(sum(add_all_loop_total_condition))
-add_all_loop_loop_count.append(sum(add_all_loop_loop_count))
-add_all_loop_time_elapsed.append(sum(add_all_loop_time_elapsed))
+all_loop_base_condition.append(sum(all_loop_base_condition))
+all_loop_total_condition.append(sum(all_loop_total_condition))
+all_loop_loop_count.append(sum(all_loop_loop_count))
+all_loop_time_elapsed.append(sum(all_loop_time_elapsed))
 
 my_base_condition.append(sum(my_base_condition))
 my_total_condition.append(sum(my_total_condition))
@@ -74,10 +74,10 @@ test_folder.append('total')
 #print(len(test_folder), len(add_all_loop_base_condition))
 
 data = pd.DataFrame({"file_test": test_folder,
-                     "add_all_loop_base_condition": add_all_loop_base_condition, "origin_base_condition": origin_base_condition, "my_base_condition": my_base_condition,
-                     "add_all_loop_total_condition": add_all_loop_total_condition, "origin_total_condition": origin_total_condition, "my_total_condition": my_total_condition,
-                     "add_all_loop_loop_count": add_all_loop_loop_count, "origin_loop_count": origin_loop_count, "my_loop_count": my_loop_count,
-                     "add_all_loop_time_elapsed": add_all_loop_time_elapsed, "origin_time_elapsed": origin_time_elapsed, "my_time_elapsed": my_time_elapsed})
+                     "add_all_loop_base_condition": all_loop_base_condition, "origin_base_condition": origin_base_condition, "my_base_condition": my_base_condition,
+                     "add_all_loop_total_condition": all_loop_total_condition, "origin_total_condition": origin_total_condition, "my_total_condition": my_total_condition,
+                     "add_all_loop_loop_count": all_loop_loop_count, "origin_loop_count": origin_loop_count, "my_loop_count": my_loop_count,
+                     "add_all_loop_time_elapsed": all_loop_time_elapsed, "origin_time_elapsed": origin_time_elapsed, "my_time_elapsed": my_time_elapsed})
 
 def df_style(x):
     return 'font-weight: bold'
