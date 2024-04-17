@@ -34,9 +34,9 @@ class SlitherLinkAddAllLoop():
                 i, j, k = [int(x) for x in lines[i].split()]
                 self.board[i - 1, j - 1] = int(k)
                 if k > 0:
-                    self.list_nums.append((i-1, j-1))
+                    self.list_nums.append((i - 1, j - 1))
                 else:
-                    self.list_empty.append((i-1, j-1))
+                    self.list_empty.append((i - 1, j - 1))
         self.converter = converter_2.Converter(self.row, self.col)
 
     def build_cell_rule(self):
@@ -135,8 +135,8 @@ class SlitherLinkAddAllLoop():
         self.build_empty_cells(1)
 
     def build_empty_cells(self, numberCells):
-        if (numberCells == 1):
-            self.build_empty_single_cell();
+        if numberCells == 1:
+            self.build_empty_single_cell()
 
     def build_empty_single_cell(self):
         for emptyCell in self.list_empty:
@@ -210,6 +210,7 @@ class SlitherLinkAddAllLoop():
             print([i for i in self.model if i > 0])
         else:
             print("Result: UNSAT")
+
 
 if __name__ == "__main__":
     solver = SlitherLinkAddAllLoop(Minisat22)
