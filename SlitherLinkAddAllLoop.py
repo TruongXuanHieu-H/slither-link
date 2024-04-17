@@ -19,7 +19,6 @@ class SlitherLinkAddAllLoop():
         self.model_arr = []
         self.num_loops = 1
         self.result = None
-        self.result_array = None
         self.row = None
         self.solver = solver()
 
