@@ -15,6 +15,7 @@ class SlitherLinkAddAllLoop():
         self.edges = None
         self.list_loops = None
         self.list_nums = []
+        self.list_empty = []
         self.model = None
         self.model_arr = []
         self.num_loops = 1
@@ -34,6 +35,8 @@ class SlitherLinkAddAllLoop():
                 self.board[i - 1, j - 1] = int(k)
                 if k > 0:
                     self.list_nums.append((i-1, j-1))
+                else:
+                    self.list_empty.append((i-1, j-1))
         self.converter = converter_2.Converter(self.row, self.col)
 
     def build_cell_rule(self):
@@ -128,9 +131,22 @@ class SlitherLinkAddAllLoop():
         self.cond.append([e1, e2, -e3, e4])
         self.cond.append([e1, e2, e3, -e4])
 
+    def build_heuristic(self):
+        self.build_empty_cells(1)
+
+    def build_empty_cells(self, numberCells):
+        if (numberCells == 1):
+            self.build_empty_single_cell();
+
+    def build_empty_single_cell(self):
+        for emptyCell in self.list_empty:
+            edges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
+            self.cond.append([-edges[0], -edges[1], -edges[2], -edges[3]])
+
     def build_cond(self):
         self.build_neighbor_rule()
         self.build_cell_rule()
+        self.build_heuristic()
 
     def solve(self):
         self.build_cond()
