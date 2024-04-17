@@ -157,7 +157,7 @@ class SlitherLinkAddAllLoop():
         self.result = self.solver.solve()
         self.model = self.solver.get_model()
         self.model_arr.append(self.model)
-        self.loop_solve();
+        self.loop_solve()
 
     def loop_solve(self):
         while self.result and self.has_multi_loops():
