@@ -211,7 +211,7 @@ class SlitherLinkAddAllLoopWithEmpty:
             print("Result: SAT")
             print([i for i in self.model if i > 0])
         else:
-            print("Result: UNSAT")
+            print("Result: UN SAT")
 
 
 if __name__ == "__main__":

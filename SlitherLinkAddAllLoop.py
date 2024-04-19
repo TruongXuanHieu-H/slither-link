@@ -4,8 +4,8 @@ from pysat.solvers import Minisat22
 import time
 
 
-class SlitherLinkAddAllLoop():
-    def __init__(self, solver):
+class SlitherLinkAddAllLoop:
+    def __init__(self, sat_solver):
         self.base_cond = []
         self.board = None
         self.col = None
@@ -19,7 +19,7 @@ class SlitherLinkAddAllLoop():
         self.num_loops = 1
         self.result = None
         self.row = None
-        self.solver = solver()
+        self.solver = sat_solver()
 
     def load_from_file(self, filename):
         with open(filename, 'rt') as file:
@@ -193,7 +193,7 @@ class SlitherLinkAddAllLoop():
             print("Result: SAT")
             print([i for i in self.model if i > 0])
         else:
-            print("Result: UNSAT")
+            print("Result: UN SAT")
 
 
 if __name__ == "__main__":
