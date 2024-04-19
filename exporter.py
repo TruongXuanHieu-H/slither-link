@@ -7,7 +7,6 @@ from pysat.solvers import Minisat22
 
 import SlitherLinkAddAllLoop
 import SlitherLinkAddAllLoopWithEmpty
-# import SlitherLinkPreloading
 
 test_folder = glob.glob("puzzle/*.txt", recursive=True)
 
@@ -21,14 +20,9 @@ all_loop_with_empty_total_condition = []
 all_loop_with_empty_loop_count = []
 all_loop_with_empty_time_elapsed = []
 
-# my_base_condition = []
-# my_total_condition = []
-# my_loop_count = []
-# my_time_elapsed = []
 
-
-def process(solver, file, base_condition, total_condition, loop_count, time_elapsed):
-    solver.load_from_file(file)
+def process(solver, file_path, base_condition, total_condition, loop_count, time_elapsed):
+    solver.load_from_file(file_path)
     start_time_origin = time.perf_counter()
     solver.solve()
     time_elapsed_origin = (time.perf_counter() - start_time_origin)
@@ -39,22 +33,18 @@ def process(solver, file, base_condition, total_condition, loop_count, time_elap
     return base_condition, total_condition, loop_count, time_elapsed
 
 
-for file in test_folder:
-    print(file)
+for file_path in test_folder:
+    print(file_path)
     print("add (add all loops)")
     all_loop_base_condition, all_loop_total_condition, all_loop_loop_count, all_loop_time_elapsed = process(
-        SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file, all_loop_base_condition,
+        SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file_path, all_loop_base_condition,
         all_loop_total_condition,
         all_loop_loop_count, all_loop_time_elapsed)
     print("add (add all loop with empty)")
     all_loop_with_empty_base_condition, all_loop_with_empty_total_condition, all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed = process(
-        SlitherLinkAddAllLoopWithEmpty.SlitherLinkAddAllLoop(Minisat22), file, all_loop_with_empty_base_condition, all_loop_with_empty_total_condition,
+        SlitherLinkAddAllLoopWithEmpty.SlitherLinkAddAllLoop(Minisat22), file_path, all_loop_with_empty_base_condition,
+        all_loop_with_empty_total_condition,
         all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed)
-    # print("add origin")
-    # origin_base_condition, origin_total_condition, origin_loop_count, origin_time_elapsed = process(
-    #     SlitherLinkOrigin.SlitherLinkOrigin(Minisat22), file, origin_base_condition,
-    #     origin_total_condition,
-    #     origin_loop_count, origin_time_elapsed)
 
 all_loop_base_condition.append(sum(all_loop_base_condition))
 all_loop_total_condition.append(sum(all_loop_total_condition))
@@ -66,25 +56,18 @@ all_loop_with_empty_total_condition.append(sum(all_loop_with_empty_total_conditi
 all_loop_with_empty_loop_count.append(sum(all_loop_with_empty_loop_count))
 all_loop_with_empty_time_elapsed.append(sum(all_loop_with_empty_time_elapsed))
 
-# origin_base_condition.append(sum(origin_base_condition))
-# origin_total_condition.append(sum(origin_total_condition))
-# origin_loop_count.append(sum(origin_loop_count))
-# origin_time_elapsed.append(sum(origin_time_elapsed))
-
 test_folder.append('total')
 
-
-# data = pd.DataFrame({"file_test": test_folder,
-#                      "add_all_loop_base_condition": all_loop_base_condition, "origin_base_condition": origin_base_condition, "my_base_condition": my_base_condition,
-#                      "add_all_loop_total_condition": all_loop_total_condition, "origin_total_condition": origin_total_condition, "my_total_condition": my_total_condition,
-#                      "add_all_loop_loop_count": all_loop_loop_count, "origin_loop_count": origin_loop_count, "my_loop_count": my_loop_count,
-#                      "add_all_loop_time_elapsed": all_loop_time_elapsed, "origin_time_elapsed": origin_time_elapsed, "my_time_elapsed": my_time_elapsed})
-
 data = pd.DataFrame({"file_test": test_folder,
-                     "add_all_loop_base_condition": all_loop_base_condition, "add_all_loop_with_empty_base_condition": all_loop_with_empty_base_condition,
-                     "add_all_loop_total_condition": all_loop_total_condition, "add_all_loop_with_empty_total_condition": all_loop_with_empty_total_condition,
-                     "add_all_loop_loop_count": all_loop_loop_count, "add_all_loop_with_empty_loop_count": all_loop_with_empty_loop_count,
-                     "add_all_loop_time_elapsed": all_loop_time_elapsed, "add_all_loop_with_empty_time_elapsed": all_loop_with_empty_time_elapsed})
+                     "add_all_loop_base_condition": all_loop_base_condition,
+                     "add_all_loop_with_empty_base_condition": all_loop_with_empty_base_condition,
+                     "add_all_loop_total_condition": all_loop_total_condition,
+                     "add_all_loop_with_empty_total_condition": all_loop_with_empty_total_condition,
+                     "add_all_loop_loop_count": all_loop_loop_count,
+                     "add_all_loop_with_empty_loop_count": all_loop_with_empty_loop_count,
+                     "add_all_loop_time_elapsed": all_loop_time_elapsed,
+                     "add_all_loop_with_empty_time_elapsed": all_loop_with_empty_time_elapsed})
+
 
 def df_style(x):
     return 'font-weight: bold'
