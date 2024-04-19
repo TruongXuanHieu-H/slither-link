@@ -90,3 +90,10 @@ class Converter:
                 return [(x, y - 1)]
             else:
                 return [(x, y), (x, y - 1)]
+
+    def get_neighbor_cells_of_cell(self, cell):
+        x, y = cell
+        rawResults = [(x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)]
+        results = list(
+            {rawResult for rawResult in rawResults if 0 <= rawResult[0] < self.row and 0 <= rawResult[1] < self.col})
+        return results

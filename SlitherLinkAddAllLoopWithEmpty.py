@@ -141,8 +141,11 @@ class SlitherLinkAddAllLoopWithEmpty:
 
     def build_empty_single_cell(self):
         for emptyCell in self.list_empty:
-            edges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
-            self.cond.append([-edges[0], -edges[1], -edges[2], -edges[3]])
+            neighbors = self.converter.get_neighbor_cells_of_cell(emptyCell)
+            neighborValues = [self.board[x, y] for x, y in neighbors]
+            if all(neighborValue == -1 for neighborValue in neighborValues):
+                edges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
+                self.cond.append([-edges[0], -edges[1], -edges[2], -edges[3]])
 
     def build_cond(self):
         self.build_neighbor_rule()
