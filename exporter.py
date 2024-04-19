@@ -21,8 +21,8 @@ all_loop_with_empty_loop_count = []
 all_loop_with_empty_time_elapsed = []
 
 
-def process(solver, file_path, base_condition, total_condition, loop_count, time_elapsed):
-    solver.load_from_file(file_path)
+def process(solver, file_name, base_condition, total_condition, loop_count, time_elapsed):
+    solver.load_from_file(file_name)
     start_time_origin = time.perf_counter()
     solver.solve()
     time_elapsed_origin = (time.perf_counter() - start_time_origin)
