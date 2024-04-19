@@ -36,14 +36,16 @@ def process(solver, file_path, base_condition, total_condition, loop_count, time
 for file_path in test_folder:
     print(file_path)
     print("add (add all loops)")
-    all_loop_base_condition, all_loop_total_condition, all_loop_loop_count, all_loop_time_elapsed = process(
-        SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file_path, all_loop_base_condition,
-        all_loop_total_condition,
+    (all_loop_base_condition, all_loop_total_condition,
+     all_loop_loop_count, all_loop_time_elapsed) = process(
+        SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file_path,
+        all_loop_base_condition, all_loop_total_condition,
         all_loop_loop_count, all_loop_time_elapsed)
     print("add (add all loop with empty)")
-    all_loop_with_empty_base_condition, all_loop_with_empty_total_condition, all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed = process(
-        SlitherLinkAddAllLoopWithEmpty.SlitherLinkAddAllLoop(Minisat22), file_path, all_loop_with_empty_base_condition,
-        all_loop_with_empty_total_condition,
+    (all_loop_with_empty_base_condition, all_loop_with_empty_total_condition,
+     all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed) = process(
+        SlitherLinkAddAllLoopWithEmpty.SlitherLinkAddAllLoop(Minisat22), file_path,
+        all_loop_with_empty_base_condition, all_loop_with_empty_total_condition,
         all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed)
 
 all_loop_base_condition.append(sum(all_loop_base_condition))
