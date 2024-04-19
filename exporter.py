@@ -13,49 +13,65 @@ test_folder = glob.glob("puzzle/*.txt", recursive=True)
 all_loop_base_condition = []
 all_loop_total_condition = []
 all_loop_loop_count = []
+all_loop_encode_time_elapse = []
+all_loop_solve_time_elapsed = []
 all_loop_time_elapsed = []
 
 all_loop_with_empty_base_condition = []
 all_loop_with_empty_total_condition = []
 all_loop_with_empty_loop_count = []
+all_loop_with_empty_encode_time_elapse = []
+all_loop_with_empty_solve_time_elapsed = []
 all_loop_with_empty_time_elapsed = []
 
 
-def process(solver, file_name, base_condition, total_condition, loop_count, time_elapsed):
+def process(solver, file_name, base_condition, total_condition, loop_count, encode_time_elapsed, solve_time_elapsed, time_elapsed):
+    start_encode_time = time.perf_counter()
     solver.load_from_file(file_name)
-    start_time_origin = time.perf_counter()
+    time_elapsed_encode = (time.perf_counter() - start_encode_time)
+    start_solve_time = time.perf_counter()
     solver.solve()
-    time_elapsed_origin = (time.perf_counter() - start_time_origin)
+    time_elapsed_solve = (time.perf_counter() - start_solve_time)
     base_condition.append(len(solver.base_cond))
     total_condition.append(len(solver.cond))
     loop_count.append(solver.num_loops)
-    time_elapsed.append(time_elapsed_origin)
-    return base_condition, total_condition, loop_count, time_elapsed
+    encode_time_elapsed.append(time_elapsed_encode)
+    solve_time_elapsed.append(time_elapsed_solve)
+    time_elapsed.append(time_elapsed_encode + time_elapsed_solve)
+    return base_condition, total_condition, loop_count, encode_time_elapsed, solve_time_elapsed, time_elapsed
 
 
 for file_path in test_folder:
     print(file_path)
     print("add (add all loops)")
     (all_loop_base_condition, all_loop_total_condition,
-     all_loop_loop_count, all_loop_time_elapsed) = process(
+     all_loop_loop_count, all_loop_encode_time_elapse,
+     all_loop_solve_time_elapsed, all_loop_time_elapsed) = process(
         SlitherLinkAddAllLoop.SlitherLinkAddAllLoop(Minisat22), file_path,
         all_loop_base_condition, all_loop_total_condition,
-        all_loop_loop_count, all_loop_time_elapsed)
+        all_loop_loop_count, all_loop_encode_time_elapse,
+        all_loop_solve_time_elapsed, all_loop_time_elapsed)
     print("add (add all loop with empty)")
     (all_loop_with_empty_base_condition, all_loop_with_empty_total_condition,
-     all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed) = process(
-        SlitherLinkAddAllLoopWithEmpty.SlitherLinkAddAllLoop(Minisat22), file_path,
+     all_loop_with_empty_loop_count, all_loop_with_empty_encode_time_elapse,
+     all_loop_with_empty_solve_time_elapsed, all_loop_with_empty_time_elapsed) = process(
+        SlitherLinkAddAllLoopWithEmpty.SlitherLinkAddAllLoopWithEmpty(Minisat22), file_path,
         all_loop_with_empty_base_condition, all_loop_with_empty_total_condition,
-        all_loop_with_empty_loop_count, all_loop_with_empty_time_elapsed)
+        all_loop_with_empty_loop_count, all_loop_with_empty_encode_time_elapse,
+        all_loop_with_empty_solve_time_elapsed, all_loop_with_empty_time_elapsed)
 
 all_loop_base_condition.append(sum(all_loop_base_condition))
 all_loop_total_condition.append(sum(all_loop_total_condition))
 all_loop_loop_count.append(sum(all_loop_loop_count))
+all_loop_encode_time_elapse.append(sum(all_loop_encode_time_elapse))
+all_loop_solve_time_elapsed.append(sum(all_loop_solve_time_elapsed))
 all_loop_time_elapsed.append(sum(all_loop_time_elapsed))
 
 all_loop_with_empty_base_condition.append(sum(all_loop_with_empty_base_condition))
 all_loop_with_empty_total_condition.append(sum(all_loop_with_empty_total_condition))
 all_loop_with_empty_loop_count.append(sum(all_loop_with_empty_loop_count))
+all_loop_with_empty_encode_time_elapse.append((sum(all_loop_with_empty_encode_time_elapse)))
+all_loop_with_empty_solve_time_elapsed.append((sum(all_loop_with_empty_solve_time_elapsed)))
 all_loop_with_empty_time_elapsed.append(sum(all_loop_with_empty_time_elapsed))
 
 test_folder.append('total')
@@ -67,6 +83,10 @@ data = pd.DataFrame({"file_test": test_folder,
                      "add_all_loop_with_empty_total_condition": all_loop_with_empty_total_condition,
                      "add_all_loop_loop_count": all_loop_loop_count,
                      "add_all_loop_with_empty_loop_count": all_loop_with_empty_loop_count,
+                     "add_all_loop_encode_time_elapse": all_loop_encode_time_elapse,
+                     "add_all_loop_with_empty_encode_time_elapse": all_loop_with_empty_encode_time_elapse,
+                     "add_all_loop_solve_time_elapsed": all_loop_solve_time_elapsed,
+                     "add_all_loop_with_empty_solve_time_elapsed": all_loop_with_empty_solve_time_elapsed,
                      "add_all_loop_time_elapsed": all_loop_time_elapsed,
                      "add_all_loop_with_empty_time_elapsed": all_loop_with_empty_time_elapsed})
 

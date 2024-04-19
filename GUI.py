@@ -4,12 +4,12 @@ from tkinter import filedialog as fd
 import time
 from SlitherLinkPreloading import SlitherLinkPreloading
 from SlitherLinkOrigin import SlitherLinkOrigin
-from SlitherLinkAddAllLoop import  SlitherLinkAddAllLoop
+from SlitherLinkAddAllLoop import SlitherLinkAddAllLoop
+from SlitherLinkAddAllLoopWithEmpty import SlitherLinkAddAllLoopWithEmpty
 from pysat.solvers import Minisat22
 
 
-class SlitherlinkApp(tk.Tk):
-
+class SlitherLinkApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         self.problem_Set = 0
         tk.Tk.__init__(self, *args, **kwargs)
@@ -58,7 +58,7 @@ class LoadPage(tk.Frame):
         label0 = tk.Label(self, text="Version")
         label0.grid(row=0, column=0)
         self.version_choose = ttk.Combobox(self, textvariable=self.version_text)
-        self.version_choose['values'] = ('Add All Loop', 'Origin', 'Preloading')
+        self.version_choose['values'] = ('Add All Loop', 'Origin', 'Preloading', 'Add All Loop With Empty')
         self.version_choose.current(0)
         self.version_choose["state"] = "readonly"
         self.version_choose.grid(row=0, column=1)
@@ -103,60 +103,72 @@ class SlitherlinkUIPage(tk.Frame):
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent)
+        self.canvas = None
         self.controller = controller
 
-        if (self.controller.version_text == "Add All Loop"):
+        if self.controller.version_text == "Add All Loop":
             self.solver = SlitherLinkAddAllLoop(Minisat22)
-        elif (self.controller.version_text == "Origin"):
+        elif self.controller.version_text == "Origin":
             self.solver = SlitherLinkOrigin(Minisat22)
-        elif (self.controller.version_text == "Preloading"):
+        elif self.controller.version_text == "Preloading":
             self.solver = SlitherLinkPreloading(Minisat22)
+        elif self.controller.version_text == "Add All Loop With Empty":
+            self.solver = SlitherLinkAddAllLoopWithEmpty(Minisat22)
 
         self.solver.load_from_file(self.controller.filename)
-
-        width_value1 = self.winfo_screenwidth()
-        height_value1 = self.winfo_screenheight()
 
         self.entries = []
 
         self.create_can()
 
-        label0 = ttk.Label(self, text='Version ' + self.controller.version_text, font=(("Bold", 20)))
-        label0.place(x=1200, y=250)
-
-        self.button = ttk.Button(self, text="Resolve", command=self.solve)
-        self.button.place(x=1200, y=300)
-        self.button_1 = ttk.Button(self, text="Previous", command=self.solve_prev)
-        self.button_1.place(x=1300, y=300)
-        self.button_2 = ttk.Button(self, text="Next", command=self.solve_next)
-        self.button_2.place(x=1400, y=300)
-        self.button_1['state'] = "disable"
-        self.button_2['state'] = "disable"
-        self.num_conds = tk.StringVar()
+        self.num_conditions = tk.StringVar()
         self.run_time = tk.StringVar()
         self.num_variable = tk.StringVar()
         self.num_loops = tk.StringVar()
+        self.label0 = ttk.Label(self, text='Version ' + self.controller.version_text, font=(("Bold", 20)))
+        self.label1 = ttk.Label(self, text="Number of loops: ")
+        self.label2 = ttk.Label(self, textvariable=self.num_loops)
+        self.label11 = ttk.Label(self, text="Number of conditions: ")
+        self.label21 = ttk.Label(self, textvariable=self.num_conditions)
+        self.label3 = ttk.Label(self, text="Number of variable: ")
+        self.label4 = ttk.Label(self, textvariable=self.num_variable)
+        self.label5 = ttk.Label(self, text="Run time (seconds): ")
+        self.label6 = ttk.Label(self, textvariable=self.run_time)
+        self.button = ttk.Button(self, text="Resolve", command=self.solve)
+        self.button_1 = ttk.Button(self, text="Previous", command=self.solve_prev)
+        self.button_2 = ttk.Button(self, text="Next", command=self.solve_next)
+        self.button_1['state'] = "disable"
+        self.button_2['state'] = "disable"
         self.count = 0
+        self.set_ui_tool_position()
 
-        label1 = ttk.Label(self, text="Number of loops: ")
-        label1.place(x=1200, y=330)
-        label2 = ttk.Label(self, textvariable=self.num_loops)
-        label2.place(x=1400, y=330)
+    def set_ui_tool_position(self):
+        self.label0.place(x=1200, y=250)
+        self.label1.place(x=1200, y=330)
+        self.label2.place(x=1400, y=330)
+        self.label11.place(x=1200, y=360)
+        self.label21.place(x=1400, y=360)
+        self.label3.place(x=1200, y=390)
+        self.label4.place(x=1400, y=390)
+        self.label5.place(x=1200, y=420)
+        self.label6.place(x=1400, y=420)
+        self.button.place(x=1200, y=300)
+        self.button_1.place(x=1300, y=300)
+        self.button_2.place(x=1400, y=300)
 
-        label1 = ttk.Label(self, text="Number of conditions: ")
-        label1.place(x=1200, y=360)
-        label2 = ttk.Label(self, textvariable=self.num_conds)
-        label2.place(x=1400, y=360)
-
-        label3 = ttk.Label(self, text="Number of variable: ")
-        label3.place(x=1200, y=390)
-        label4 = ttk.Label(self, textvariable=self.num_variable)
-        label4.place(x=1400, y=390)
-
-        label5 = ttk.Label(self, text="Run time (seconds): ")
-        label5.place(x=1200, y=420)
-        label6 = ttk.Label(self, textvariable=self.run_time)
-        label6.place(x=1400, y=420)
+    def set_ui_tool_visibility(self):
+        self.label0.lift()
+        self.label1.lift()
+        self.label2.lift()
+        self.label11.lift()
+        self.label21.lift()
+        self.label3.lift()
+        self.label4.lift()
+        self.label5.lift()
+        self.label6.lift()
+        self.button.lift()
+        self.button_1.lift()
+        self.button_2.lift()
 
     def solve(self, *args):
         self.button['state'] = "disable"
@@ -167,11 +179,11 @@ class SlitherlinkUIPage(tk.Frame):
 
         end_time = time.time()
 
-        self.updateCan()
+        self.update_can()
 
         self.num_loops.set(self.solver.num_loops)
 
-        self.num_conds.set(str(len(self.solver.cond)))
+        self.num_conditions.set(str(len(self.solver.cond)))
 
         self.run_time.set(str(end_time - start_time))
 
@@ -187,7 +199,7 @@ class SlitherlinkUIPage(tk.Frame):
             self.button_1['state'] = "disable"
         self.solver.model = self.solver.model_arr[self.count - 1]
 
-        self.updateCan()
+        self.update_can()
         self.num_loops.set(str(self.count))
 
         self.button_2['state'] = "enable"
@@ -198,12 +210,12 @@ class SlitherlinkUIPage(tk.Frame):
             self.button_2['state'] = "disable"
         self.solver.model = self.solver.model_arr[self.count - 1]
 
-        self.updateCan()
+        self.update_can()
         self.num_loops.set(str(self.count))
 
         self.button_1['state'] = "enable"
 
-    def updateCan(self):
+    def update_can(self):
         self.canvas.delete("all")
         self.create_can()
         if self.solver.result:
@@ -215,6 +227,7 @@ class SlitherlinkUIPage(tk.Frame):
                 x2 = x2 * 28 + 10
                 y2 = y2 * 28 + 10
                 self.canvas.create_line(y1, x1, y2, x2, width=1)
+        self.set_ui_tool_visibility()
 
     def create_can(self):
 
@@ -244,7 +257,7 @@ class SlitherlinkUIPage(tk.Frame):
             p = 18
 
 
-app = SlitherlinkApp()
+app = SlitherLinkApp()
 width_value = app.winfo_screenwidth()
 height_value = app.winfo_screenheight()
 app.geometry("%dx%d+0+0" % (width_value, height_value))

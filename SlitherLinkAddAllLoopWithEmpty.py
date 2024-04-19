@@ -4,8 +4,8 @@ from pysat.solvers import Minisat22
 import time
 
 
-class SlitherLinkAddAllLoop():
-    def __init__(self, solver):
+class SlitherLinkAddAllLoopWithEmpty:
+    def __init__(self, sat_solver):
         self.base_cond = []
         self.board = None
         self.col = None
@@ -20,7 +20,7 @@ class SlitherLinkAddAllLoop():
         self.num_loops = 1
         self.result = None
         self.row = None
-        self.solver = solver()
+        self.solver = sat_solver()
 
     def load_from_file(self, filename):
         with open(filename, 'rt') as file:
@@ -34,8 +34,10 @@ class SlitherLinkAddAllLoop():
                 self.board[i - 1, j - 1] = int(k)
                 if k > 0:
                     self.list_nums.append((i - 1, j - 1))
-                else:
-                    self.list_empty.append((i - 1, j - 1))
+        for i in range(self.row):
+            for j in range(self.col):
+                if self.board[i, j] == -1:
+                    self.list_empty.append((i, j))
         self.converter = converter_2.Converter(self.row, self.col)
 
     def build_cell_rule(self):
@@ -213,7 +215,7 @@ class SlitherLinkAddAllLoop():
 
 
 if __name__ == "__main__":
-    solver = SlitherLinkAddAllLoop(Minisat22)
+    solver = SlitherLinkAddAllLoopWithEmpty(Minisat22)
     solver.load_from_file("puzzle/puzzle_50x40_1.txt")
     start_time = time.time()
     solver.solve()
