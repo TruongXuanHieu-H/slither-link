@@ -125,53 +125,59 @@ class SlitherlinkUIPage(tk.Frame):
         self.run_time = tk.StringVar()
         self.num_variable = tk.StringVar()
         self.num_loops = tk.StringVar()
-        self.label0 = ttk.Label(self, text='Version ' + self.controller.version_text, font=(("Bold", 20)))
-        self.label1 = ttk.Label(self, text="Number of loops: ")
-        self.label2 = ttk.Label(self, textvariable=self.num_loops)
-        self.label11 = ttk.Label(self, text="Number of conditions: ")
-        self.label21 = ttk.Label(self, textvariable=self.num_conditions)
-        self.label3 = ttk.Label(self, text="Number of variable: ")
-        self.label4 = ttk.Label(self, textvariable=self.num_variable)
-        self.label5 = ttk.Label(self, text="Run time (seconds): ")
-        self.label6 = ttk.Label(self, textvariable=self.run_time)
-        self.button = ttk.Button(self, text="Resolve", command=self.solve)
-        self.button_1 = ttk.Button(self, text="Previous", command=self.solve_prev)
-        self.button_2 = ttk.Button(self, text="Next", command=self.solve_next)
-        self.button_1['state'] = "disable"
-        self.button_2['state'] = "disable"
+        self.label_version = ttk.Label(self, text='Version ' + self.controller.version_text, font=(("Bold", 20)))
+        self.label_number_loop = ttk.Label(self, text="Number of loops: ")
+        self.label_number_loop_value = ttk.Label(self, textvariable=self.num_loops)
+        self.label_number_conditions = ttk.Label(self, text="Number of conditions: ")
+        self.label_number_conditions_value = ttk.Label(self, textvariable=self.num_conditions)
+        self.label_number_variables = ttk.Label(self, text="Number of variable: ")
+        self.label_number_variables_value = ttk.Label(self, textvariable=self.num_variable)
+        self.label_runtime = ttk.Label(self, text="Run time (seconds): ")
+        self.label_runtime_value = ttk.Label(self, textvariable=self.run_time)
+        self.button_resolve = ttk.Button(self, text="Resolve", command=self.solve)
+        self.button_previous = ttk.Button(self, text="Previous", command=self.solve_prev)
+        self.button_next = ttk.Button(self, text="Next", command=self.solve_next)
+        self.button_previous['state'] = "disable"
+        self.button_next['state'] = "disable"
+        self.label_jump_to_loop = ttk.Label(self, text="Jump to loop: ")
+        self.text_field_jump = tk.Entry(self)
+        self.button_jump = ttk.Button(self, text="Jump", command=self.jump_to_loop)
         self.count = 0
         self.set_ui_tool_position()
 
     def set_ui_tool_position(self):
-        self.label0.place(x=1200, y=250)
-        self.label1.place(x=1200, y=330)
-        self.label2.place(x=1400, y=330)
-        self.label11.place(x=1200, y=360)
-        self.label21.place(x=1400, y=360)
-        self.label3.place(x=1200, y=390)
-        self.label4.place(x=1400, y=390)
-        self.label5.place(x=1200, y=420)
-        self.label6.place(x=1400, y=420)
-        self.button.place(x=1200, y=300)
-        self.button_1.place(x=1300, y=300)
-        self.button_2.place(x=1400, y=300)
+        self.label_version.place(x=1200, y=250)
+        self.label_number_loop.place(x=1200, y=330)
+        self.label_number_loop_value.place(x=1400, y=330)
+        self.label_number_conditions.place(x=1200, y=360)
+        self.label_number_conditions_value.place(x=1400, y=360)
+        self.label_number_variables.place(x=1200, y=390)
+        self.label_number_variables_value.place(x=1400, y=390)
+        self.label_runtime.place(x=1200, y=420)
+        self.label_runtime_value.place(x=1400, y=420)
+        self.button_resolve.place(x=1200, y=300)
+        self.button_previous.place(x=1300, y=300)
+        self.button_next.place(x=1400, y=300)
+        self.label_jump_to_loop.place(x=1200, y=450)
+        self.text_field_jump.place(x=1300, y=450)
+        self.button_jump.place(x=1450, y=450)
 
     def set_ui_tool_visibility(self):
-        self.label0.lift()
-        self.label1.lift()
-        self.label2.lift()
-        self.label11.lift()
-        self.label21.lift()
-        self.label3.lift()
-        self.label4.lift()
-        self.label5.lift()
-        self.label6.lift()
-        self.button.lift()
-        self.button_1.lift()
-        self.button_2.lift()
+        self.label_version.lift()
+        self.label_number_loop.lift()
+        self.label_number_loop_value.lift()
+        self.label_number_conditions.lift()
+        self.label_number_conditions_value.lift()
+        self.label_number_variables.lift()
+        self.label_number_variables_value.lift()
+        self.label_runtime.lift()
+        self.label_runtime_value.lift()
+        self.button_resolve.lift()
+        self.button_previous.lift()
+        self.button_next.lift()
 
     def solve(self, *args):
-        self.button['state'] = "disable"
+        self.button_resolve['state'] = "disable"
         self.count = 0
         start_time = time.time()
 
@@ -191,29 +197,41 @@ class SlitherlinkUIPage(tk.Frame):
 
         self.count = len(self.solver.model_arr)
 
-        self.button_1['state'] = "enable"
+        self.button_previous['state'] = "enable"
 
     def solve_prev(self, *args):
         self.count -= 1
         if self.count == 1:
-            self.button_1['state'] = "disable"
+            self.button_previous['state'] = "disable"
         self.solver.model = self.solver.model_arr[self.count - 1]
 
         self.update_can()
         self.num_loops.set(str(self.count))
 
-        self.button_2['state'] = "enable"
+        self.button_next['state'] = "enable"
 
     def solve_next(self, *args):
         self.count += 1
         if self.count == len(self.solver.model_arr):
-            self.button_2['state'] = "disable"
+            self.button_next['state'] = "disable"
         self.solver.model = self.solver.model_arr[self.count - 1]
 
         self.update_can()
         self.num_loops.set(str(self.count))
 
-        self.button_1['state'] = "enable"
+        self.button_previous['state'] = "enable"
+
+    def jump_to_loop(self, *args):
+        loop_index = int(self.text_field_jump.get())
+        if 0 < loop_index <= len(self.solver.model_arr):
+            self.count = loop_index
+            self.solver.model = self.solver.model_arr[self.count - 1]
+            self.update_can()
+            self.num_loops.set(str(self.count))
+            if self.count == 1:
+                self.button_previous['state'] = "disable"
+            if self.count == len(self.solver.model_arr):
+                self.button_next['state'] = "disable"
 
     def update_can(self):
         self.canvas.delete("all")
