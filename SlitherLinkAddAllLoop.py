@@ -1,5 +1,4 @@
 import numpy as np
-
 import converter_2
 from pysat.solvers import Minisat22
 import time
@@ -33,7 +32,7 @@ class SlitherLinkAddAllLoop():
                 i, j, k = [int(x) for x in lines[i].split()]
                 self.board[i - 1, j - 1] = int(k)
                 if k > 0:
-                    self.list_nums.append((i-1, j-1))
+                    self.list_nums.append((i - 1, j - 1))
         self.converter = converter_2.Converter(self.row, self.col)
 
     def build_cell_rule(self):
@@ -141,7 +140,8 @@ class SlitherLinkAddAllLoop():
         self.result = self.solver.solve()
         self.model = self.solver.get_model()
         self.model_arr.append(self.model)
-        self.loop_solve();
+        if len(self.list_nums) > 0:
+            self.loop_solve()
 
     def loop_solve(self):
         while self.result and self.has_multi_loops():
@@ -194,6 +194,7 @@ class SlitherLinkAddAllLoop():
             print([i for i in self.model if i > 0])
         else:
             print("Result: UNSAT")
+
 
 if __name__ == "__main__":
     solver = SlitherLinkAddAllLoop(Minisat22)

@@ -2,6 +2,7 @@ import glob
 import time
 
 import pandas as pd
+from openpyxl import load_workbook
 from pysat.solvers import Minisat22
 
 import SlitherLinkAddAllLoop
@@ -99,3 +100,8 @@ for column in data:
     writer.sheets['sheet1'].set_column(col_idx, col_idx, column_length)
 
 writer.close()
+
+book = load_workbook('output.xlsx')
+sheet = book.active
+sheet.freeze_panes = 'B2'
+book.save('output.xlsx')

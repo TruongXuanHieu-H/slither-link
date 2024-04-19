@@ -1,5 +1,4 @@
 import numpy as np
-
 import converter_2
 from pysat.solvers import Minisat22
 import time
@@ -157,7 +156,8 @@ class SlitherLinkAddAllLoop():
         self.result = self.solver.solve()
         self.model = self.solver.get_model()
         self.model_arr.append(self.model)
-        self.loop_solve()
+        if len(self.list_nums) > 0:
+            self.loop_solve()
 
     def loop_solve(self):
         while self.result and self.has_multi_loops():
