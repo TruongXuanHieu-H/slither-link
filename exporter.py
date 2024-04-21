@@ -1,5 +1,6 @@
 import glob
 import time
+import os
 
 import pandas as pd
 from openpyxl import load_workbook
@@ -51,7 +52,7 @@ def process(solver, file_name, base_condition, total_condition, loop_count, enco
 
 
 for file_path in test_folder:
-    print(file_path)
+    print(f"{get_first_solver().__class__.__name__} - {file_path}")
     (first_solver_base_condition, first_solver_total_condition,
      first_solver_loop_count, first_solver_encode_time_elapse,
      first_solver_solve_time_elapsed, first_solver_time_elapsed) = process(
@@ -59,13 +60,6 @@ for file_path in test_folder:
         first_solver_base_condition, first_solver_total_condition,
         first_solver_loop_count, first_solver_encode_time_elapse,
         first_solver_solve_time_elapsed, first_solver_time_elapsed)
-    (second_solver_base_condition, second_solver_total_condition,
-     second_solver_loop_count, second_solver_encode_time_elapse,
-     second_solver_solve_time_elapsed, second_solver_time_elapsed) = process(
-        get_second_solver(), file_path,
-        second_solver_base_condition, second_solver_total_condition,
-        second_solver_loop_count, second_solver_encode_time_elapse,
-        second_solver_solve_time_elapsed, second_solver_time_elapsed)
 
 first_solver_base_condition.append(sum(first_solver_base_condition))
 first_solver_total_condition.append(sum(first_solver_total_condition))
@@ -73,6 +67,16 @@ first_solver_loop_count.append(sum(first_solver_loop_count))
 first_solver_encode_time_elapse.append(sum(first_solver_encode_time_elapse))
 first_solver_solve_time_elapsed.append(sum(first_solver_solve_time_elapsed))
 first_solver_time_elapsed.append(sum(first_solver_time_elapsed))
+
+for file_path in test_folder:
+    print(f"{get_second_solver().__class__.__name__} - {file_path}")
+    (second_solver_base_condition, second_solver_total_condition,
+     second_solver_loop_count, second_solver_encode_time_elapse,
+     second_solver_solve_time_elapsed, second_solver_time_elapsed) = process(
+        get_second_solver(), file_path,
+        second_solver_base_condition, second_solver_total_condition,
+        second_solver_loop_count, second_solver_encode_time_elapse,
+        second_solver_solve_time_elapsed, second_solver_time_elapsed)
 
 second_solver_base_condition.append(sum(second_solver_base_condition))
 second_solver_total_condition.append(sum(second_solver_total_condition))
@@ -102,7 +106,7 @@ def df_style(x):
     return 'font-weight: bold'
 
 
-output_file = (f"{get_first_solver().__class__.__name__} VS "
+output_file = (f"output/{get_first_solver().__class__.__name__} VS "
                f"{get_second_solver().__class__.__name__} - "
                f"{time.strftime('%Y-%m-%d %H-%M-%S')}.xlsx")
 
@@ -121,3 +125,5 @@ book = load_workbook(output_file)
 sheet = book.active
 sheet.freeze_panes = 'B2'
 book.save(output_file)
+
+os.startfile(f"{os.getcwd()}/{output_file}")
