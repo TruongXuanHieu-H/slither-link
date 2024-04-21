@@ -133,11 +133,10 @@ class SlitherLinkAddAllLoopWithEmpty:
         self.cond.append([e1, e2, e3, -e4])
 
     def build_heuristic(self):
-        self.build_empty_cells(1)
+        self.build_empty_cells()
 
-    def build_empty_cells(self, numberCells):
-        if numberCells == 1:
-            self.build_empty_single_cell()
+    def build_empty_cells(self):
+        self.build_empty_single_cell()
 
     def build_empty_single_cell(self):
         for emptyCell in self.list_empty:
