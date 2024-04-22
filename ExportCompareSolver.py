@@ -8,7 +8,7 @@ from pysat.solvers import Minisat22
 
 from SlitherLinkAddAllLoop import SlitherLinkAddAllLoop
 from SlitherLinkAddAllLoopWithEmpty import SlitherLinkAddAllLoopWithEmpty
-from SlitherLinkPatterns import  SlitherLinkPatterns
+from SlitherLinkPatterns import SlitherLinkPatterns
 
 test_folder = glob.glob("puzzle/*.txt", recursive=True)
 number_solve_per_test = 10
