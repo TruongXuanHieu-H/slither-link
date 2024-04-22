@@ -243,39 +243,39 @@ class SlitherlinkUIPage(tk.Frame):
             edges = [self.solver.converter.get_two_vertices(i) for i in self.solver.model if i > 0]
             for edge in edges:
                 x1, y1, x2, y2 = edge
-                x1 = x1 * 28 + 10
-                y1 = y1 * 28 + 10
-                x2 = x2 * 28 + 10
-                y2 = y2 * 28 + 10
+                x1 = x1 * 20 + 10
+                y1 = y1 * 20 + 10
+                x2 = x2 * 20 + 10
+                y2 = y2 * 20 + 10
                 self.canvas.create_line(y1, x1, y2, x2, width=1)
         self.set_ui_tool_visibility()
 
     def create_can(self):
 
-        self.canvas = tk.Canvas(self, height=self.solver.row * 28 + 30, width=self.solver.col * 28 + 30)
+        self.canvas = tk.Canvas(self, height=self.solver.row * 20 + 30, width=self.solver.col * 20 + 30)
 
         for i in range(self.solver.col + 1):
             for j in range(self.solver.row + 1):
-                x = i * 28 + 10
-                y = j * 28 + 10
+                x = i * 20 + 10
+                y = j * 20 + 10
                 self.canvas.create_oval(x - 1, y - 1, x + 1, y + 1, width=3)
         self.canvas.place(x=0, y=0)
-        p, q = 18, 14
+        p, q = 14, 12
 
         for i in range(self.solver.row):
             for k in range(self.solver.col):
                 x = self.solver.board[i][k]
                 text_value = tk.StringVar()
-                if (x >= 0):
+                if x >= 0:
                     text_value.set(x)
 
-                entry = tk.Label(self, textvariable=text_value, fg='black', font=("Normal", 10))
+                entry = tk.Label(self, textvariable=text_value, fg='black', font=("Normal", 6))
                 entry.grid_slaves(row=i, column=k)
                 entry.place(x=p, y=q)
                 self.entries.append(text_value)
-                p += 28.0
-            q += 28
-            p = 18
+                p += 20.0
+            q += 20
+            p = 14
 
 
 app = SlitherLinkApp()
