@@ -10,6 +10,7 @@ from SlitherLinkAddAllLoop import SlitherLinkAddAllLoop
 from SlitherLinkAddAllLoopWithEmpty import SlitherLinkAddAllLoopWithEmpty
 
 test_folder = glob.glob("puzzle/*.txt", recursive=True)
+number_solve_per_test = 10
 
 first_solver_base_condition = []
 first_solver_total_condition = []
@@ -27,39 +28,62 @@ second_solver_time_elapsed = []
 
 
 def get_first_solver():
-    return SlitherLinkAddAllLoop(Minisat22)
+    return SlitherLinkAddAllLoopWithEmpty(get_first_solver_params())
+
+
+def get_first_solver_params():
+    return Minisat22
 
 
 def get_second_solver():
-    return SlitherLinkAddAllLoopWithEmpty(Minisat22)
+    return SlitherLinkAddAllLoop(get_second_solver_params())
 
 
-def process(solver, file_name, base_condition, total_condition, loop_count, encode_time_elapsed, solve_time_elapsed,
-            time_elapsed):
-    start_encode_time = time.perf_counter()
-    solver.load_from_file(file_name)
-    time_elapsed_encode = (time.perf_counter() - start_encode_time)
-    start_solve_time = time.perf_counter()
-    solver.solve()
-    time_elapsed_solve = (time.perf_counter() - start_solve_time)
-    base_condition.append(len(solver.base_cond))
-    total_condition.append(len(solver.cond))
-    loop_count.append(solver.num_loops)
-    encode_time_elapsed.append(time_elapsed_encode)
-    solve_time_elapsed.append(time_elapsed_solve)
-    time_elapsed.append(time_elapsed_encode + time_elapsed_solve)
-    return base_condition, total_condition, loop_count, encode_time_elapsed, solve_time_elapsed, time_elapsed
+def get_second_solver_params():
+    return Minisat22
+
+
+def process(solver, solver_params, file_name, base_condition, total_condition, loop_count, encode_time_elapsed,
+            solve_time_elapsed, time_elapsed):
+    base_condition_list = []
+    total_condition_list = []
+    loop_count_list = []
+    encode_time_elapsed_list = []
+    solve_time_elapsed_list = []
+    time_elapsed_list = []
+
+    for i in range(number_solve_per_test):
+        solver_instance = type(solver)(solver_params)
+
+        start_encode_time = time.perf_counter()
+        solver_instance.load_from_file(file_name)
+        end_encode_time = time.perf_counter()
+
+        start_solve_time = time.perf_counter()
+        solver_instance.solve()
+        end_solve_time = time.perf_counter()
+
+        base_condition_list.append(len(solver_instance.base_cond))
+        total_condition_list.append(len(solver_instance.cond))
+        loop_count_list.append(solver_instance.num_loops)
+        encode_time_elapsed_list.append((end_encode_time - start_encode_time) * 1000)
+        solve_time_elapsed_list.append((end_solve_time - start_solve_time) * 1000)
+        time_elapsed_list.append(encode_time_elapsed_list[-1] + solve_time_elapsed_list[-1])
+
+    base_condition.append(sum(base_condition_list) / number_solve_per_test)
+    total_condition.append(sum(total_condition_list) / number_solve_per_test)
+    loop_count.append(sum(loop_count_list) / number_solve_per_test)
+    encode_time_elapsed.append(sum(encode_time_elapsed_list) / number_solve_per_test)
+    solve_time_elapsed.append(sum(solve_time_elapsed_list) / number_solve_per_test)
+    time_elapsed.append(sum(time_elapsed_list) / number_solve_per_test)
 
 
 for file_path in test_folder:
     print(f"{get_first_solver().__class__.__name__} - {file_path}")
-    (first_solver_base_condition, first_solver_total_condition,
-     first_solver_loop_count, first_solver_encode_time_elapse,
-     first_solver_solve_time_elapsed, first_solver_time_elapsed) = process(
-        get_first_solver(), file_path,
-        first_solver_base_condition, first_solver_total_condition,
-        first_solver_loop_count, first_solver_encode_time_elapse,
-        first_solver_solve_time_elapsed, first_solver_time_elapsed)
+    process(get_first_solver(), get_first_solver_params(), file_path,
+            first_solver_base_condition, first_solver_total_condition,
+            first_solver_loop_count, first_solver_encode_time_elapse,
+            first_solver_solve_time_elapsed, first_solver_time_elapsed)
 
 first_solver_base_condition.append(sum(first_solver_base_condition))
 first_solver_total_condition.append(sum(first_solver_total_condition))
@@ -70,13 +94,10 @@ first_solver_time_elapsed.append(sum(first_solver_time_elapsed))
 
 for file_path in test_folder:
     print(f"{get_second_solver().__class__.__name__} - {file_path}")
-    (second_solver_base_condition, second_solver_total_condition,
-     second_solver_loop_count, second_solver_encode_time_elapse,
-     second_solver_solve_time_elapsed, second_solver_time_elapsed) = process(
-        get_second_solver(), file_path,
-        second_solver_base_condition, second_solver_total_condition,
-        second_solver_loop_count, second_solver_encode_time_elapse,
-        second_solver_solve_time_elapsed, second_solver_time_elapsed)
+    process(get_second_solver(), get_second_solver_params(), file_path,
+            second_solver_base_condition, second_solver_total_condition,
+            second_solver_loop_count, second_solver_encode_time_elapse,
+            second_solver_solve_time_elapsed, second_solver_time_elapsed)
 
 second_solver_base_condition.append(sum(second_solver_base_condition))
 second_solver_total_condition.append(sum(second_solver_total_condition))
@@ -94,12 +115,12 @@ data = pd.DataFrame({"file_test": test_folder,
                      "second_solver_total_condition": second_solver_total_condition,
                      "first_solver_loop_count": first_solver_loop_count,
                      "second_solver_loop_count": second_solver_loop_count,
-                     "first_solver_encode_time_elapse": first_solver_encode_time_elapse,
-                     "second_solver_encode_time_elapse": second_solver_encode_time_elapse,
-                     "first_solver_solve_time_elapsed": first_solver_solve_time_elapsed,
-                     "second_solver_solve_time_elapsed": second_solver_solve_time_elapsed,
-                     "first_solver_time_elapsed": first_solver_time_elapsed,
-                     "second_solver_time_elapsed": second_solver_time_elapsed})
+                     "first_solver_encode_time_elapse (ms)": first_solver_encode_time_elapse,
+                     "second_solver_encode_time_elapse (ms)": second_solver_encode_time_elapse,
+                     "first_solver_solve_time_elapsed (ms)": first_solver_solve_time_elapsed,
+                     "second_solver_solve_time_elapsed (ms)": second_solver_solve_time_elapsed,
+                     "first_solver_time_elapsed (ms)": first_solver_time_elapsed,
+                     "second_solver_time_elapsed (ms)": second_solver_time_elapsed})
 
 
 def df_style(x):
@@ -108,6 +129,7 @@ def df_style(x):
 
 output_file = (f"output/{get_first_solver().__class__.__name__} VS "
                f"{get_second_solver().__class__.__name__} - "
+               f"x{number_solve_per_test} - "
                f"{time.strftime('%Y-%m-%d %H-%M-%S')}.xlsx")
 
 last_row = pd.IndexSlice[data.index[-1], :]
