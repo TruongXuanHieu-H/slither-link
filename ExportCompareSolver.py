@@ -8,6 +8,7 @@ from pysat.solvers import Minisat22
 
 from SlitherLinkAddAllLoop import SlitherLinkAddAllLoop
 from SlitherLinkAddAllLoopWithEmpty import SlitherLinkAddAllLoopWithEmpty
+from SlitherLinkPatterns import  SlitherLinkPatterns
 
 test_folder = glob.glob("puzzle/*.txt", recursive=True)
 number_solve_per_test = 10
@@ -28,7 +29,7 @@ second_solver_time_elapsed = []
 
 
 def get_first_solver():
-    return SlitherLinkAddAllLoopWithEmpty(get_first_solver_params())
+    return SlitherLinkAddAllLoop(get_first_solver_params())
 
 
 def get_first_solver_params():
@@ -36,7 +37,7 @@ def get_first_solver_params():
 
 
 def get_second_solver():
-    return SlitherLinkAddAllLoop(get_second_solver_params())
+    return SlitherLinkPatterns(get_second_solver_params())
 
 
 def get_second_solver_params():
