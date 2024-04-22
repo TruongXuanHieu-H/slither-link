@@ -6,6 +6,7 @@ from SlitherLinkPreloading import SlitherLinkPreloading
 from SlitherLinkOrigin import SlitherLinkOrigin
 from SlitherLinkAddAllLoop import SlitherLinkAddAllLoop
 from SlitherLinkAddAllLoopWithEmpty import SlitherLinkAddAllLoopWithEmpty
+from SlitherLinkPatterns import SlitherLinkPatterns
 from pysat.solvers import Minisat22
 
 
@@ -58,8 +59,8 @@ class LoadPage(tk.Frame):
         label0 = tk.Label(self, text="Version")
         label0.grid(row=0, column=0)
         self.version_choose = ttk.Combobox(self, textvariable=self.version_text)
-        self.version_choose['values'] = ('Add All Loop', 'Origin', 'Preloading', 'Add All Loop With Empty')
-        self.version_choose.current(0)
+        self.version_choose['values'] = ('Add All Loop', 'Origin', 'Preloading', 'Add All Loop With Empty', "Patterns")
+        self.version_choose.current(4)
         self.version_choose["state"] = "readonly"
         self.version_choose.grid(row=0, column=1)
 
@@ -114,6 +115,8 @@ class SlitherlinkUIPage(tk.Frame):
             self.solver = SlitherLinkPreloading(Minisat22)
         elif self.controller.version_text == "Add All Loop With Empty":
             self.solver = SlitherLinkAddAllLoopWithEmpty(Minisat22)
+        elif self.controller.version_text == "Patterns":
+            self.solver = SlitherLinkPatterns(Minisat22)
 
         self.solver.load_from_file(self.controller.filename)
 
