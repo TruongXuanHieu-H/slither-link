@@ -12,9 +12,13 @@ class SlitherLinkPatterns:
         self.cond = []
         self.converter = None
         self.edges = None
+        self.list_cell_empty = []
+        self.list_cell_0 = []
+        self.list_cell_1 = []
+        self.list_cell_2 = []
+        self.list_cell_3 = []
         self.list_loops = None
         self.list_nums = []
-        self.list_empty = []
         self.model = None
         self.model_arr = []
         self.num_loops = 1
@@ -37,7 +41,15 @@ class SlitherLinkPatterns:
         for i in range(self.row):
             for j in range(self.col):
                 if self.board[i, j] == -1:
-                    self.list_empty.append((i, j))
+                    self.list_cell_empty.append((i, j))
+                elif self.board[i, j] == 0:
+                    self.list_cell_0.append((i, j))
+                elif self.board[i, j] == 1:
+                    self.list_cell_1.append((i, j))
+                elif self.board[i, j] == 2:
+                    self.list_cell_2.append((i, j))
+                elif self.board[i, j] == 3:
+                    self.list_cell_3.append((i, j))
         self.converter = converter_2.Converter(self.row, self.col)
 
     def build_cell_rule(self):
@@ -133,22 +145,38 @@ class SlitherLinkPatterns:
         self.cond.append([e1, e2, e3, -e4])
 
     def build_heuristic(self):
-        self.build_empty_cells()
+        # self.build_empty_cells()
         self.build_patterns()
 
     def build_empty_cells(self):
         self.build_empty_single_cell()
+        self.build_empty_couple_cells()
 
     def build_empty_single_cell(self):
-        for emptyCell in self.list_empty:
+        for emptyCell in self.list_cell_empty:
             neighbors = self.converter.get_neighbor_cells_of_cell(emptyCell)
             neighborValues = [self.board[x, y] for x, y in neighbors]
             if all(neighborValue == -1 for neighborValue in neighborValues):
                 edges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
                 self.cond.append([-edges[0], -edges[1], -edges[2], -edges[3]])
 
+    def build_empty_couple_cells(self):
+        for emptyCell in self.list_cell_empty:
+            neighbors = self.converter.get_neighbor_cells_of_cell(emptyCell)
+            coupleNeighbors = list(
+                neighbor for neighbor in neighbors if neighbor[0] >= emptyCell[0] and neighbor[1] >= emptyCell[1])
+            for coupleNeighbor in coupleNeighbors:
+                neighborValue = self.board[coupleNeighbor[0], coupleNeighbor[1]]
+                if neighborValue == -1:
+                    cellEdges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
+                    neighborEdges = self.converter.get_side_edges(coupleNeighbor[0], coupleNeighbor[1])
+                    borders = list(set(cellEdges) ^ set(neighborEdges))  # Guarantee 6 elements
+                    self.cond.append([-border for border in borders])
+
     def build_patterns(self):
         self.build_pattern_3_in_corners()
+        self.build_pattern_3_cross_3()
+        self.build_pattern_3_adjacent_0()
 
     def build_pattern_3_in_corners(self):
         if self.board[0, 0] == 3:
@@ -163,6 +191,39 @@ class SlitherLinkPatterns:
         if self.board[self.row - 1, self.col - 1] == 3:
             edges = self.converter.get_side_edges(self.row - 1, self.col - 1)
             self.cond.append([edges[1], edges[3]])
+
+    def build_pattern_3_cross_3(self):
+        for cell_3 in self.list_cell_3:
+            if cell_3[0] < self.row - 1:
+                if cell_3[1] < self.col - 1:
+                    cross_cell_3_up = [cell_3[0] + 1, cell_3[1] + 1]
+                    if self.board[cross_cell_3_up[0], cross_cell_3_up[1]] == 3:
+                        up_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
+                        up_cross_edges = self.converter.get_side_edges(cross_cell_3_up[0], cross_cell_3_up[1])
+                        self.cond.append([up_edges[0], up_edges[2], up_cross_edges[1], up_cross_edges[3]])
+                if cell_3[1] > 0:
+                    cross_cell_3_down = [cell_3[0] + 1, cell_3[1] - 1]
+                    if self.board[cross_cell_3_down[0], cross_cell_3_down[1]] == 3:
+                        down_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
+                        down_cross_edges = self.converter.get_side_edges(cross_cell_3_down[0], cross_cell_3_down[1])
+                        self.cond.append([down_edges[0], down_edges[3], down_cross_edges[1], down_cross_edges[2]])
+
+    def build_pattern_3_adjacent_0(self):
+        for cell_3 in self.list_cell_3:
+            neighbors = self.converter.get_neighbor_cells_of_cell(cell_3)
+            for neighbor in neighbors:
+                if self.board[neighbor[0], neighbor[1]] == 0:
+                    if not ((cell_3[0] == 0 and neighbor[0] == 0)
+                            or (cell_3[0] == self.row - 1 and neighbor[0] == self.row - 1)
+                            or (cell_3[1] == 0 and neighbor[1] == 0)
+                            or (cell_3[1] == self.col - 1 and neighbor[1] == self.col - 1)):
+                        edges_3 = self.converter.get_side_edges(cell_3[0], cell_3[1])
+                        edges_0 = self.converter.get_side_edges(neighbor[0], neighbor[1])
+                        edge_adjacent = list(set(edges_3) & set(edges_0))
+                        edges_3_encode = list(set(edges_3) ^ set(edge_adjacent))
+                        edges_3_encode.append(edge_adjacent[0] - 1)
+                        edges_3_encode.append(edge_adjacent[0] + 1)
+                        self.cond.append([edge for edge in edges_3_encode])
 
     def build_cond(self):
         self.build_neighbor_rule()
@@ -236,7 +297,7 @@ class SlitherLinkPatterns:
 
 if __name__ == "__main__":
     solver = SlitherLinkPatterns(Minisat22)
-    solver.load_from_file("puzzle/5x5_1.txt")
+    solver.load_from_file("puzzle/test_3_adjacent_0.txt")
     start_time = time.time()
     solver.solve()
     end_time = time.time()
