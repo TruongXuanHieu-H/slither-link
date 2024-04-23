@@ -57,13 +57,14 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
                             or (cell_3[0] == self.board_row - 1 and neighbor[0] == self.board_row - 1)
                             or (cell_3[1] == 0 and neighbor[1] == 0)
                             or (cell_3[1] == self.board_col - 1 and neighbor[1] == self.board_col - 1)):
-                        edges_3 = self.converter.get_side_edges(cell_3[0], cell_3[1])
-                        edges_0 = self.converter.get_side_edges(neighbor[0], neighbor[1])
-                        edge_adjacent = list(set(edges_3) & set(edges_0))
-                        edges_3_encode = list(set(edges_3) ^ set(edge_adjacent))
-                        edges_3_encode.append(edge_adjacent[0] - 1)
-                        edges_3_encode.append(edge_adjacent[0] + 1)
-                        self.cond.append([edge for edge in edges_3_encode])
+                        edges_3_0 = self.converter.get_side_edges(cell_3[0], cell_3[1])
+                        edges_0_0 = self.converter.get_side_edges(neighbor[0], neighbor[1])
+                        edge_adjacent_0 = list(set(edges_3_0) & set(edges_0_0))
+                        edges_3_encode_0 = list(set(edges_3_0) ^ set(edge_adjacent_0))
+                        edges_3_encode_0.append(edge_adjacent_0[0] - 1)
+                        edges_3_encode_0.append(edge_adjacent_0[0] + 1)
+                        for edge in edges_3_encode_0:
+                            self.cond.append([edge])
 
 
 if __name__ == "__main__":
