@@ -8,7 +8,8 @@ class SlitherLinkAddAllLoop:
     def __init__(self, sat_solver):
         self.base_cond = []
         self.board = None
-        self.col = None
+        self.board_col = None
+        self.board_row = None
         self.cond = []
         self.converter = None
         self.edges = None
@@ -18,26 +19,25 @@ class SlitherLinkAddAllLoop:
         self.model_arr = []
         self.num_loops = 1
         self.result = None
-        self.row = None
         self.solver = sat_solver()
 
     def load_from_file(self, filename):
         with open(filename, 'rt') as file:
             lines = file.readlines()
         assert len(lines[0].split()) == 2, "Invalid"
-        self.row, self.col = [int(x) for x in lines[0].split()]
-        self.board = -np.ones(self.row * self.col, dtype=np.int32).reshape(self.row, self.col)
+        self.board_row, self.board_col = [int(x) for x in lines[0].split()]
+        self.board = -np.ones(self.board_row * self.board_col, dtype=np.int32).reshape(self.board_row, self.board_col)
         for i in range(1, len(lines)):
             if len(lines[i].split()) == 3:
                 i, j, k = [int(x) for x in lines[i].split()]
                 self.board[i - 1, j - 1] = int(k)
                 if k > 0:
                     self.list_nums.append((i - 1, j - 1))
-        self.converter = converter_2.Converter(self.row, self.col)
+        self.converter = converter_2.Converter(self.board_row, self.board_col)
 
     def build_cell_rule(self):
-        for i in range(self.row):
-            for j in range(self.col):
+        for i in range(self.board_row):
+            for j in range(self.board_col):
                 if self.board[i, j] >= 0:
                     side_edges = self.converter.get_side_edges(i, j)
                     self.build_cell_condition(side_edges, self.board[i, j])
@@ -83,8 +83,8 @@ class SlitherLinkAddAllLoop:
             raise ValueError
 
     def build_neighbor_rule(self):
-        for i in range(self.row + 1):
-            for j in range(self.col + 1):
+        for i in range(self.board_row + 1):
+            for j in range(self.board_col + 1):
                 neighbor_edges = self.converter.get_neighbor_edges(i, j)
                 self.build_neighbor_condition(neighbor_edges)
 
@@ -198,7 +198,7 @@ class SlitherLinkAddAllLoop:
 
 if __name__ == "__main__":
     solver = SlitherLinkAddAllLoop(Minisat22)
-    solver.load_from_file("puzzle/puzzle_50x40_1.txt")
+    solver.load_from_file("puzzle/50x40_1.txt")
     start_time = time.time()
     solver.solve()
     end_time = time.time()

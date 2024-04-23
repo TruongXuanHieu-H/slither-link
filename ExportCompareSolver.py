@@ -11,7 +11,7 @@ from SlitherLinkAddAllLoopWithEmpty import SlitherLinkAddAllLoopWithEmpty
 from SlitherLinkPatterns import SlitherLinkPatterns
 
 test_folder = glob.glob("puzzle/*.txt", recursive=True)
-number_solve_per_test = 10
+number_solve_per_test = 1
 
 first_solver_base_condition = []
 first_solver_total_condition = []
