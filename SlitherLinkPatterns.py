@@ -17,16 +17,20 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
     def build_pattern_3_in_corners(self):
         if self.board[0, 0] == 3:
             edges = self.converter.get_side_edges(0, 0)
-            self.cond.append([edges[0], edges[2]])
+            self.cond.append([edges[0]])
+            self.cond.append([edges[2]])
         if self.board[0, self.board_col - 1] == 3:
             edges = self.converter.get_side_edges(0, self.board_col - 1)
-            self.cond.append([edges[0], edges[3]])
+            self.cond.append([edges[0]])
+            self.cond.append([edges[3]])
         if self.board[self.board_row - 1, 0] == 3:
             edges = self.converter.get_side_edges(self.board_row - 1, 0)
-            self.cond.append([edges[1], edges[2]])
+            self.cond.append([edges[1]])
+            self.cond.append([edges[2]])
         if self.board[self.board_row - 1, self.board_col - 1] == 3:
             edges = self.converter.get_side_edges(self.board_row - 1, self.board_col - 1)
-            self.cond.append([edges[1], edges[3]])
+            self.cond.append([edges[1]])
+            self.cond.append([edges[3]])
 
     def build_pattern_3_cross_3(self):
         for cell_3 in self.list_cell_3:
