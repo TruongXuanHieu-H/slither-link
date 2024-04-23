@@ -97,3 +97,10 @@ class Converter:
         results = list(
             {rawResult for rawResult in rawResults if 0 <= rawResult[0] < self.row and 0 <= rawResult[1] < self.col})
         return results
+
+    def get_cross_cells_of_cell(self, cell):
+        x, y = cell
+        rawResults = [(x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1), (x + 1, y + 1)]
+        results = list(
+            {rawResult for rawResult in rawResults if 0 <= rawResult[0] < self.row and 0 <= rawResult[1] < self.col})
+        return results
