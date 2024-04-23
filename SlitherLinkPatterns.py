@@ -11,8 +11,8 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
 
     def build_patterns(self):
         self.build_pattern_3_in_corners()
-        self.build_pattern_3_cross_something()
-        self.build_pattern_3_adjacent_something()
+        # self.build_pattern_3_cross_something()
+        # self.build_pattern_3_adjacent_something()
 
     def build_pattern_3_in_corners(self):
         if self.board[0, 0] == 3:

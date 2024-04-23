@@ -109,27 +109,29 @@ second_solver_time_elapsed.append(sum(second_solver_time_elapsed))
 
 test_folder.append('total')
 
+first_solver_name = get_first_solver().__class__.__name__
+second_solver_name = get_second_solver().__class__.__name__
 data = pd.DataFrame({"file_test": test_folder,
-                     "first_solver_base_condition": first_solver_base_condition,
-                     "second_solver_base_condition": second_solver_base_condition,
-                     "first_solver_total_condition": first_solver_total_condition,
-                     "second_solver_total_condition": second_solver_total_condition,
-                     "first_solver_loop_count": first_solver_loop_count,
-                     "second_solver_loop_count": second_solver_loop_count,
-                     "first_solver_encode_time_elapse (ms)": first_solver_encode_time_elapse,
-                     "second_solver_encode_time_elapse (ms)": second_solver_encode_time_elapse,
-                     "first_solver_solve_time_elapsed (ms)": first_solver_solve_time_elapsed,
-                     "second_solver_solve_time_elapsed (ms)": second_solver_solve_time_elapsed,
-                     "first_solver_time_elapsed (ms)": first_solver_time_elapsed,
-                     "second_solver_time_elapsed (ms)": second_solver_time_elapsed})
+                     f"{first_solver_name}_base_condition": first_solver_base_condition,
+                     f"{second_solver_name}_base_condition": second_solver_base_condition,
+                     f"{first_solver_name}_total_condition": first_solver_total_condition,
+                     f"{second_solver_name}_total_condition": second_solver_total_condition,
+                     f"{first_solver_name}_loop_count": first_solver_loop_count,
+                     f"{second_solver_name}_loop_count": second_solver_loop_count,
+                     f"{first_solver_name}_encode_time_elapse (ms)": first_solver_encode_time_elapse,
+                     f"{second_solver_name}_encode_time_elapse (ms)": second_solver_encode_time_elapse,
+                     f"{first_solver_name}_solve_time_elapsed (ms)": first_solver_solve_time_elapsed,
+                     f"{second_solver_name}_solve_time_elapsed (ms)": second_solver_solve_time_elapsed,
+                     f"{first_solver_name}_time_elapsed (ms)": first_solver_time_elapsed,
+                     f"{second_solver_name}_time_elapsed (ms)": second_solver_time_elapsed})
 
 
 def df_style(x):
     return 'font-weight: bold'
 
 
-output_file = (f"output/{get_first_solver().__class__.__name__} VS "
-               f"{get_second_solver().__class__.__name__} - "
+output_file = (f"output/{first_solver_name} VS "
+               f"{second_solver_name} - "
                f"x{number_solve_per_test} - "
                f"{time.strftime('%Y-%m-%d %H-%M-%S')}.xlsx")
 

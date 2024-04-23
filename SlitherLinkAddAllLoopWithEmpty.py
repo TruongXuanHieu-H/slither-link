@@ -35,7 +35,6 @@ class SlitherLinkAddAllLoopWithEmpty(SlitherLinkAddAllLoop):
         self.build_empty_single_cell()
         self.build_empty_single_cell_adjacent_3()
         self.build_empty_couple_cells()
-        # self.build_double_cells_3()
 
     def build_empty_single_cell(self):
         for emptyCell in self.list_cell_empty:
@@ -61,19 +60,6 @@ class SlitherLinkAddAllLoopWithEmpty(SlitherLinkAddAllLoop):
                 neighborValue = self.board[coupleNeighbor[0], coupleNeighbor[1]]
                 if neighborValue == -1:
                     cellEdges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
-                    neighborEdges = self.converter.get_side_edges(coupleNeighbor[0], coupleNeighbor[1])
-                    borders = list(set(cellEdges) ^ set(neighborEdges))  # Guarantee 6 elements
-                    self.cond.append([-border for border in borders])
-
-    def build_double_cells_3(self):
-        for cell_3 in self.list_cell_3:
-            neighbors = self.converter.get_neighbor_cells_of_cell(cell_3)
-            coupleNeighbors = list(
-                neighbor for neighbor in neighbors if neighbor[0] >= cell_3[0] and neighbor[1] >= cell_3[1])
-            for coupleNeighbor in coupleNeighbors:
-                neighborValue = self.board[coupleNeighbor[0], coupleNeighbor[1]]
-                if neighborValue == -1:
-                    cellEdges = self.converter.get_side_edges(cell_3[0], cell_3[1])
                     neighborEdges = self.converter.get_side_edges(coupleNeighbor[0], coupleNeighbor[1])
                     borders = list(set(cellEdges) ^ set(neighborEdges))  # Guarantee 6 elements
                     self.cond.append([-border for border in borders])
