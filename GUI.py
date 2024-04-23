@@ -252,18 +252,18 @@ class SlitherlinkUIPage(tk.Frame):
 
     def create_can(self):
 
-        self.canvas = tk.Canvas(self, height=self.solver.row * 20 + 30, width=self.solver.col * 20 + 30)
+        self.canvas = tk.Canvas(self, height=self.solver.board_row * 20 + 30, width=self.solver.board_col * 20 + 30)
 
-        for i in range(self.solver.col + 1):
-            for j in range(self.solver.row + 1):
+        for i in range(self.solver.board_col + 1):
+            for j in range(self.solver.board_row + 1):
                 x = i * 20 + 10
                 y = j * 20 + 10
                 self.canvas.create_oval(x - 1, y - 1, x + 1, y + 1, width=3)
         self.canvas.place(x=0, y=0)
         p, q = 14, 12
 
-        for i in range(self.solver.row):
-            for k in range(self.solver.col):
+        for i in range(self.solver.board_row):
+            for k in range(self.solver.board_col):
                 x = self.solver.board[i][k]
                 text_value = tk.StringVar()
                 if x >= 0:
