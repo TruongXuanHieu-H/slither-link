@@ -61,7 +61,6 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
                             self.cond.append([cell_3_edges[1]])
                             self.cond.append([cell_3_edges[3]])
 
-
     def build_pattern_3_adjacent_something(self):
         for cell_3 in self.list_cell_3:
             neighbors = self.converter.get_neighbor_cells_of_cell(cell_3)
