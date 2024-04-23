@@ -34,19 +34,16 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
 
     def build_pattern_3_cross_3(self):
         for cell_3 in self.list_cell_3:
-            if cell_3[0] < self.board_row - 1:
-                if cell_3[1] < self.board_col - 1:
-                    cross_cell_3_up = [cell_3[0] + 1, cell_3[1] + 1]
-                    if self.board[cross_cell_3_up[0], cross_cell_3_up[1]] == 3:
-                        up_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
-                        up_cross_edges = self.converter.get_side_edges(cross_cell_3_up[0], cross_cell_3_up[1])
-                        self.cond.append([up_edges[0], up_edges[2], up_cross_edges[1], up_cross_edges[3]])
-                if cell_3[1] > 0:
-                    cross_cell_3_down = [cell_3[0] + 1, cell_3[1] - 1]
-                    if self.board[cross_cell_3_down[0], cross_cell_3_down[1]] == 3:
-                        down_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
-                        down_cross_edges = self.converter.get_side_edges(cross_cell_3_down[0], cross_cell_3_down[1])
-                        self.cond.append([down_edges[0], down_edges[3], down_cross_edges[1], down_cross_edges[2]])
+            cross_cells = self.converter.get_cross_cells_of_cell(cell_3)
+            for cross_cell in cross_cells:
+                if self.board[cross_cell[0], cross_cell[1]] == 3:
+                    if cross_cell[0] > cell_3[0]:
+                        cell_3_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
+                        cross_cell_3_edges = self.converter.get_side_edges(cross_cell[0], cross_cell[1])
+                        self.cond.append([cell_3_edges[0]])
+                        self.cond.append([cell_3_edges[2]] if cell_3[1] < cross_cell[1] else [cell_3_edges[3]])
+                        self.cond.append([cross_cell_3_edges[1]])
+                        self.cond.append([cross_cell_3_edges[3]] if cell_3[1] < cross_cell[1] else [cross_cell_3_edges[2]])
 
     def build_pattern_3_adjacent_0(self):
         for cell_3 in self.list_cell_3:
