@@ -1,5 +1,3 @@
-import numpy as np
-import converter_2
 from pysat.solvers import Minisat22
 import time
 

@@ -1,9 +1,7 @@
-import numpy as np
-import converter_2
 from pysat.solvers import Minisat22
 import time
 
-from SlitherLinkAddAllLoop import  SlitherLinkAddAllLoop
+from SlitherLinkAddAllLoop import SlitherLinkAddAllLoop
 
 
 class SlitherLinkAddAllLoopWithEmpty(SlitherLinkAddAllLoop):
