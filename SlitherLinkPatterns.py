@@ -36,6 +36,7 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
         for cell_3 in self.list_cell_3:
             cross_cells = self.converter.get_cross_cells_of_cell(cell_3)
             for cross_cell in cross_cells:
+                # 3 cross 3
                 if self.board[cross_cell[0], cross_cell[1]] == 3:
                     if cross_cell[0] > cell_3[0]:
                         cell_3_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
@@ -44,6 +45,8 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
                         self.cond.append([cell_3_edges[2]] if cell_3[1] < cross_cell[1] else [cell_3_edges[3]])
                         self.cond.append([cross_cell_3_edges[1]])
                         self.cond.append([cross_cell_3_edges[3]] if cell_3[1] < cross_cell[1] else [cross_cell_3_edges[2]])
+
+                # 3 cross 0
                 if self.board[cross_cell[0], cross_cell[1]] == 0:
                     cell_3_edges = self.converter.get_side_edges(cell_3[0], cell_3[1])
                     if cell_3[0] > cross_cell[0]:
@@ -65,6 +68,7 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
         for cell_3 in self.list_cell_3:
             neighbors = self.converter.get_neighbor_cells_of_cell(cell_3)
             for neighbor in neighbors:
+                # 3 adjacent 0
                 if self.board[neighbor[0], neighbor[1]] == 0:
                     if not ((cell_3[0] == 0 and neighbor[0] == 0)
                             or (cell_3[0] == self.board_row - 1 and neighbor[0] == self.board_row - 1)
@@ -78,6 +82,8 @@ class SlitherLinkPatterns(SlitherLinkAddAllLoopWithEmpty):
                         edges_3_encode_0.append(edge_adjacent_0[0] + 1)
                         for edge in edges_3_encode_0:
                             self.cond.append([edge])
+
+                # 3 adjacent 3
                 if self.board[neighbor[0], neighbor[1]] == 3:
                     if neighbor[0] >= cell_3[0] and neighbor[1] >= cell_3[1]:
                         edges_3_3 = self.converter.get_side_edges(cell_3[0], cell_3[1])
