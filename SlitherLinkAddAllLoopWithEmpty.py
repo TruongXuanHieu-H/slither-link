@@ -68,6 +68,24 @@ class SlitherLinkAddAllLoopWithEmpty(SlitherLinkAddAllLoop):
         super().build_cond()
         self.build_heuristic()
 
+    def negate_loop(self, loop):
+        super().negate_loop(loop)
+        self.negate_extra_loop(loop)
+
+    def negate_extra_loop(self, loop):
+        """ Extend loop by nearby emtpy cells and negate all of them. """
+        adjacentEmptyCells = []
+        for edge in loop:
+            cells = self.converter.get_neighbor_cells(edge)
+            for cell in cells:
+                if self.board[cell[0], cell[1]] == -1:
+                    adjacentEmptyCells.append(cell)
+        for emptyCell in list(set(adjacentEmptyCells)): # Call list(set()) to remove duplicate cells
+            emptyCellEdges = self.converter.get_side_edges(emptyCell[0], emptyCell[1])
+            extraLoop = set(loop) ^ set(emptyCellEdges)
+            self.solver.add_clause([-i for i in extraLoop])
+            self.cond.append([-i for i in extraLoop])
+
 
 if __name__ == "__main__":
     solver = SlitherLinkAddAllLoopWithEmpty(Minisat22)

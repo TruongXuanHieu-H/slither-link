@@ -151,13 +151,16 @@ class SlitherLinkAddAllLoop:
                 return
 
             for curr_loop in self.list_loops:
-                self.solver.add_clause([-i for i in curr_loop])
-                self.cond.append([-i for i in curr_loop])
+                self.negate_loop(curr_loop)
 
             self.num_loops += 1
             self.result = self.solver.solve()
             self.model = self.solver.get_model()
             self.model_arr.append(self.model)
+
+    def negate_loop(self, loop):
+        self.solver.add_clause([-i for i in loop])
+        self.cond.append([-i for i in loop])
 
     def has_multi_loops(self):
         self.list_loops = []
